@@ -1,6 +1,6 @@
 from PIL import Image
 import sys, os
-import requests
+import requests, urllib.request
 from io import BytesIO
 import time, datetime
 from django.core.files.base import ContentFile
@@ -15,7 +15,6 @@ import numpy as np
 # import matplotlib.pyplot as plt
 # import matplotlib.image as mpimg
 from PIL import ImageDraw, ImageFont
-
 
 #### UTILS ####
 #add frame to the image
@@ -96,8 +95,9 @@ def p_detection(img_name):
     out_f_name = f_n + "_out." + f_e
     #Load the input image
     if "http" in img_name: # for GCS
-        response = requests.get(img_name)
-        img_RGB = image.load_img(BytesIO(response.content), target_size=(256,256)) #RGB
+        # response = requests.get(img_name)
+        # img = Image.open(BytesIO(response.content))
+        img_RGB = image.load_img(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../media/images/temp.jpg'), target_size=(256,256)) #RGB
     else:
         img_RGB = image.load_img(img_name, target_size=(256,256)) #RGB
 
