@@ -69,11 +69,11 @@ def imgtool(img_name, img_name_pre = False):
 #parkinson detection
 def p_detection(img_name):
     #### SETTINGS ####
-    labels = {0:'ET',1:'NORMAL',2:'PD'}
-    # labels = {0:'NORMAL',1:'PD'}
+    # labels = {0:'ET',1:'NORMAL',2:'PD'}
+    labels = {0:'NORMAL',1:'PD'}
 
-    model = load_model('model/pd_et_normal_vgg16.h5')
-    # model = load_model(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../model/pd_et_normal_vgg16.h5'))
+    model = load_model('model/pd_normal_vgg16_88_bg.h5') #pd_normal_vgg16_88_bg.h5  pd_et_normal_vgg16.h5
+    # model = load_model(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../model/pd_normal_vgg16_88_bg.h5'))
 
     # Modify the last layer of the model to make CAM model
     model_h = model
@@ -109,19 +109,20 @@ def p_detection(img_name):
     print("shape of the x for visualize_cam:", x.shape)
 
     # classifer 2類
-    # classes = model.predict(x)
-    # print("predicted class:", classes)
-    # if classes[0] <=0.5:
-    #     print('normal')
-    # else:
-    #     print('pd')
+    classes = model.predict(x)
+    print("predicted class:", classes)
+    if classes[0] <=0.5:
+        class_name = labels[0]
+    else:
+        class_name = labels[1]
+    print('the class name is:',class_name)
 
     # classifer 3類
-    classes = model.predict(x)
-    print('predicted class:',classes[0])
-    print("predicted class:", np.argmax(classes[0]))
-    class_name = labels[np.argmax(classes[0])]
-    print('the class name is:',class_name)
+    # classes = model.predict(x)
+    # print('predicted class:',classes[0])
+    # print("predicted class:", np.argmax(classes[0]))
+    # class_name = labels[np.argmax(classes[0])]
+    # print('the class name is:',class_name)
 
     # Generate heatmap of the predicted image
     heatmap = visualize_cam(model_h, -6, filter_indices=1, seed_input=x[0,:,:,:])
