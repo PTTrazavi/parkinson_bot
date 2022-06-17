@@ -68,23 +68,31 @@ def handle_image_message(event):
     #process the image to make some changes
     # img_out, img_pre = imgtool("media/images/" + temp_name + ".jpg", True)
     if 'http' in img.image_file.url:
-        img_out, img_pre = p_detection(img.image_file.url[:]) # GCS
+        img_out, img_pre, class_name = p_detection(img.image_file.url[:]) # GCS
         #send back the message id (used for debug)
         # image_message1 = TextSendMessage(text=str(line_bot_api.get_message_content(event.message.id)) + "AI處理圖片中請稍等10~15秒")
         #send back the original image sent by the user
-        image_message2 = ImageSendMessage(
+        image_message2 = [
+                TextSendMessage(
+                text = "小帕AI預測："+class_name
+                                    ),
+                ImageSendMessage(
                                         original_content_url=img_out,
                                         preview_image_url   =img_out
-                                    )
+                                    )]
     else:
-        img_out, img_pre = p_detection(img.image_file.url[1:]) # local
+        img_out, img_pre, class_name = p_detection(img.image_file.url[1:]) # local
         #send back the message id (used for debug)
         # image_message1 = TextSendMessage(text=str(line_bot_api.get_message_content(event.message.id)) + "AI處理圖片中請稍等10~15秒")
         #send back the original image sent by the user
-        image_message2 = ImageSendMessage(
+        image_message2 = [
+                TextSendMessage(
+                text = "小帕AI預測："+class_name
+                                    ),
+                ImageSendMessage(
                                         original_content_url='https://3fd2d44ddddb.ngrok.io' + img_out,
                                         preview_image_url   ='https://3fd2d44ddddb.ngrok.io' + img_out
-                                    )
+                                    )]
 
     #line_bot_api.reply_message(event.reply_token, image_message1)
     line_bot_api.reply_message(event.reply_token, image_message2)

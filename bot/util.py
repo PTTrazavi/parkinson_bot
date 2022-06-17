@@ -125,7 +125,7 @@ def p_detection(img_name):
     # print('the class name is:',class_name)
 
     # Generate heatmap of the predicted image
-    heatmap = visualize_cam(model_h, -6, filter_indices=1, seed_input=x[0,:,:,:])
+    heatmap = visualize_cam(model_h, -1, filter_indices=None, seed_input=x[0,:,:,:])
     print("shape of heatmap:",heatmap.shape)
     # combine two pic
     img = Image.fromarray(overlay(img_RGB, heatmap).astype('uint8'))
@@ -150,4 +150,4 @@ def p_detection(img_name):
     img2 = Imageupload(image_file=img_content, title= out_f_name.split('.')[-2], date_of_upload = date_of_upload)
     img2.save()
 
-    return img2.image_file.url, "no preview"
+    return img2.image_file.url, "no preview", class_name
